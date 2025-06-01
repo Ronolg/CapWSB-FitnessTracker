@@ -1,5 +1,6 @@
 package pl.wsb.fitnesstracker.user.internal;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,11 @@ import pl.wsb.fitnesstracker.user.api.UserDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/users")
-@RequiredArgsConstructor
+@AllArgsConstructor
 class UserController {
 
     private final UserServiceImpl userService;
@@ -154,7 +156,7 @@ class UserController {
      * @return a {@link ResponseEntity} containing the deleted {@link User} and HTTP status 200 (OK)
      * @throws ResponseStatusException with status 404 if no user with the specified ID is found
      */
-    @DeleteMapping("/delete/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable Long userId) {
         try {
             return ResponseEntity.ok(userMapper.toDto(userService.deleteUserById(userId)));
@@ -162,7 +164,6 @@ class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
         }
     }
-
 
     /**
      * Handles HTTP GET requests to find users whose email addresses contain the specified fragment,
@@ -200,33 +201,42 @@ class UserController {
     }
 
     /**
-     * Handles HTTP PATCH requests to update a specific attribute of a user.
+     * Handles HTTP PUT requests to update an existing user or create a new user with the given ID.
+     * <p>
+     * If a user with the specified {@code userId} exists, their information will be updated
+     * with the data provided in {@code newUserDto}, and a {@code 204 No Content} response is returned.
+     * If the user does not exist, a new user will be created and returned with a {@code 201 Created} status.
+     * </p>
      *
-     * <p>This method allows partial updates to a user by specifying the attribute name and the new value
-     * as request parameters. It delegates the update logic to the {@link UserService}. If the user with
-     * the given ID exists and the attribute is valid, the user's information is updated and the updated
-     * {@link User} object is returned in the response body.</p>
+     * <p>
+     * This method also handles validation and domain-specific exceptions:
+     * <ul>
+     *   <li>Returns {@code 400 Bad Request} if the input data is invalid (e.g., violates business rules).</li>
+     *   <li>Returns {@code 404 Not Found} if a referenced resource required for creation is missing.</li>
+     * </ul>
+     * </p>
      *
-     * <p>If the specified user does not exist or if the attribute/value is invalid, an exception is
-     * caught and rethrown as a {@link ResponseStatusException} with HTTP status 400 (Bad Request).</p>
-     *
-     * @param id        the ID of the user to update
-     * @param attribute the name of the attribute to update (e.g., "firstName", "email")
-     * @param value     the new value to set for the specified attribute
-     * @return a {@link ResponseEntity} containing the updated {@link User} and HTTP status 200 (OK)
-     * @throws ResponseStatusException with status 400 if the attribute or value is invalid,
-     *                                  or if the user does not exist
+     * @param userId      the ID of the user to update or create
+     * @param newUserDto  the user data to use for updating or creating the user
+     * @return a {@link ResponseEntity} containing the created {@link UserDto} if a new user was created (HTTP 201),
+     *         or an empty response if the user was updated (HTTP 204)
+     * @throws ResponseStatusException with status {@code 400 Bad Request} if input is invalid
+     * @throws ResponseStatusException with status {@code 404 Not Found} if a required resource is missing
      */
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> updateUserAttribute(
-            @PathVariable Long id,
-            @RequestParam String attribute,
-            @RequestParam String value) {
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserDto> updateUserOrCreateUser(
+            @PathVariable Long userId,
+            @RequestBody UserDto newUserDto) {
 
         try {
-            return ResponseEntity.ok(userMapper.toDto(userService.updateUserAttribute(id, attribute, value)));
-        } catch (IllegalArgumentException | UserNotFoundException ex) {
+            Optional<User> user = userService.updateOrCreateUser(userId, userMapper.toEntity(newUserDto));
+            return user.map(value -> ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDto(value)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+
+        } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        } catch (UserNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
     }
 }

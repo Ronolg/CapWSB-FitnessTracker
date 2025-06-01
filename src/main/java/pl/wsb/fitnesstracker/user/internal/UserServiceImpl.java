@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.wsb.fitnesstracker.user.api.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
@@ -177,43 +178,32 @@ class UserServiceImpl implements UserService, UserProvider {
     }
 
     /**
-     * Updates a specific attribute of a user identified by their ID.
+     * Updates an existing user with the provided data or creates a new user if the user does not exist.
+     * <p>
+     * If a user with the given {@code userId} exists, their details (first name, last name,
+     * birthdate, and email) will be updated with values from {@code newUser}. If no such user exists,
+     * a new user is created using the provided {@code newUser} object.
+     * </p>
      *
-     * <p>This method performs a partial update on a user entity by setting the specified attribute
-     * to the given value. Supported attributes include {@code "firstname"}, {@code "lastname"},
-     * {@code "email"}, and {@code "birthdate"}. The update is case-insensitive with respect to the
-     * attribute name.</p>
-     *
-     * <p>If the user with the specified ID does not exist, a {@link UserNotFoundException} is thrown.
-     * If the attribute is unsupported or the value is invalid (e.g., incorrect date format), an
-     * {@link IllegalArgumentException} is thrown.</p>
-     *
-     * @param userId   the ID of the user to update
-     * @param attribute the name of the attribute to update
-     * @param value     the new value for the specified attribute
-     * @return the updated {@link User} entity
-     * @throws UserNotFoundException if no user with the given ID is found
-     * @throws IllegalArgumentException if the attribute is not supported or the value is invalid
+     * @param userId   the ID of the user to update or create
+     * @param newUser  the user data to apply to the existing user or to use for creating a new user
+     * @return an {@link Optional} containing the newly created user if one was created,
+     *         or the updated user if one already existed
      */
     @Override
-    public User updateUserAttribute(Long userId, String attribute, String value) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+    public Optional<User> updateOrCreateUser(Long userId, User newUser) {
+        Optional<User> user = userRepository.findById(userId);
 
-        switch (attribute.toLowerCase()) {
-            case "firstname" -> user.setFirstName(value);
-            case "lastname" -> user.setLastName(value);
-            case "email" -> user.setEmail(value);
-            case "birthdate" -> {
-                try {
-                    user.setBirthdate(LocalDate.parse(value));
-                } catch (DateTimeParseException e) {
-                    throw new IllegalArgumentException("Invalid date format. Use yyyy-MM-dd.");
-                }
-            }
-            default -> throw new IllegalArgumentException("Unsupported attribute: " + attribute);
+        if (user.isEmpty()) {
+            return Optional.ofNullable(createUser(newUser));
         }
 
-        return userRepository.save(user);
+        user.get().setFirstName(newUser.getFirstName());
+        user.get().setLastName(newUser.getLastName());
+        user.get().setBirthdate(newUser.getBirthdate());
+        user.get().setEmail(newUser.getEmail());
+        userRepository.save(user.get());
+
+        return user;
     }
 }

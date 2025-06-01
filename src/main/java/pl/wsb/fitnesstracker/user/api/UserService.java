@@ -18,5 +18,5 @@ public interface UserService {
     User deleteUserById(Long userId);
     List<User> findUsersByEmailFragment(String fragment);
     List<User> findAllUsersOlderThan(int ageThreshold);
-    User updateUserAttribute(Long userId, String attribute, String value);
+    Optional<User> updateOrCreateUser(Long userId, User newUser);
 }
