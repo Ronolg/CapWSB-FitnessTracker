@@ -1,9 +1,9 @@
-package pl.wsb.fitnesstracker.training.internal;
+package pl.wsb.fitnesstracker.training.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.wsb.fitnesstracker.training.api.Training;
+import pl.wsb.fitnesstracker.training.internal.ActivityType;
 
 import java.util.Date;
 

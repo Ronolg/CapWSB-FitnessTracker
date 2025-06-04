@@ -1,9 +1,11 @@
 package pl.wsb.fitnesstracker.training.internal;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.wsb.fitnesstracker.training.api.Training;
+import pl.wsb.fitnesstracker.training.api.TrainingDto;
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
 import pl.wsb.fitnesstracker.training.api.TrainingNotFoundException;
 
@@ -16,31 +18,43 @@ import java.util.List;
 public class TrainingController {
 
     private final TrainingServiceImpl trainingService;
+    private final TrainingMapper trainingMapper;
 
+
+    /**
+     * @return
+     */
     @GetMapping
     public List<Training> findAll() {
         return trainingService.findAllTrainings();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Training> findById(@PathVariable Long id) {
-        return trainingService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new TrainingNotFoundException(id));
-    }
 
-    @GetMapping("/user/{userId}")
+    /**
+     * @param userId
+     * @return
+     */
+    @GetMapping("/{userId}")
     public List<Training> findByUserId(@PathVariable Long userId) {
         return trainingService.findTrainingsByUserId(userId);
     }
 
-    @GetMapping("/after")
-    public List<Training> findAfterDate(@RequestParam("date") Date date) {
+    /**
+     * @param date
+     * @return
+     */
+    @GetMapping("/finished/{date}")
+    public List<Training> findAfterDate(
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return trainingService.findTrainingsAfterDate(date);
     }
 
-    @GetMapping("/activity")
-    public List<Training> findByActivity(@RequestParam("type") ActivityType activityType) {
+    /**
+     * @param activityType
+     * @return
+     */
+    @GetMapping("/activityType")
+    public List<Training> findByActivity(@RequestParam("activityType") ActivityType activityType) {
         return trainingService.findTrainingsByActivity(activityType);
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.training.api.TrainingProvider;
+import pl.wsb.fitnesstracker.training.api.TrainingService;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class TrainingServiceImpl implements TrainingProvider {
+public class TrainingServiceImpl implements TrainingService {
 
     private final TrainingRepository trainingRepository;
 
