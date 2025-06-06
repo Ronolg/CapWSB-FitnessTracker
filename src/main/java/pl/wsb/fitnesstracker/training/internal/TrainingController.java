@@ -22,11 +22,8 @@ import java.util.Optional;
 @RequestMapping("/v1/trainings")
 @RequiredArgsConstructor
 public class TrainingController {
-
     private final TrainingServiceImpl trainingService;
-
     private final TrainingMapper trainingMapper;
-
 
     /**
      * @return

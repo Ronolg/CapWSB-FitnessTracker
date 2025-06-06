@@ -3,6 +3,7 @@ package pl.wsb.fitnesstracker.training.internal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.wsb.fitnesstracker.training.api.Training;
+import pl.wsb.fitnesstracker.training.api.TrainingDto;
 import pl.wsb.fitnesstracker.training.api.TrainingNotFoundException;
 import pl.wsb.fitnesstracker.training.api.TrainingService;
 import pl.wsb.fitnesstracker.user.api.User;

@@ -1,7 +1,8 @@
-package pl.wsb.fitnesstracker.training.internal;
+package pl.wsb.fitnesstracker.training.api;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.Nullable;
+import pl.wsb.fitnesstracker.training.internal.ActivityType;
 
 import java.util.Date;
 

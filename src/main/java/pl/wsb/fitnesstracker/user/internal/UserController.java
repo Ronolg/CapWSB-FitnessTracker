@@ -21,9 +21,7 @@ import java.util.Optional;
 @RequestMapping("/v1/users")
 @AllArgsConstructor
 class UserController {
-
     private final UserServiceImpl userService;
-
     private final UserMapper userMapper;
 
     /**

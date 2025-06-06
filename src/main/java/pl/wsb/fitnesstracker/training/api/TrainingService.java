@@ -1,7 +1,6 @@
 package pl.wsb.fitnesstracker.training.api;
 
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
-import pl.wsb.fitnesstracker.training.internal.TrainingDto;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserNotFoundException;
 
