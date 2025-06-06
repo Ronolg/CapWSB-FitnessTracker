@@ -1,7 +1,6 @@
 package pl.wsb.fitnesstracker.user.internal;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -232,7 +231,6 @@ class UserController {
             Optional<User> user = userService.updateOrCreateUser(userId, userMapper.toEntity(newUserDto));
             return user.map(value -> ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDto(value)))
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
-
         } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
         } catch (UserNotFoundException ex) {
