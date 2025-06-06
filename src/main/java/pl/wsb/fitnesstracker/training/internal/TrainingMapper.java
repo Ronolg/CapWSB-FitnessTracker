@@ -12,6 +12,15 @@ public class TrainingMapper {
                 training.getEndTime(),
                 training.getActivityType(),
                 training.getDistance(),
+<<<<<<< HEAD
                 training.getAverageSpeed());
     }
 }
+=======
+                training.getAverageSpeed()
+        );
+    }
+
+
+}
+>>>>>>> db2c946bac2b51318c1c55dbb579ac00e4465c35
