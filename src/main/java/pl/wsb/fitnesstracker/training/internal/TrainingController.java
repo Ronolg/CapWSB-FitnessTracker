@@ -17,6 +17,7 @@ import pl.wsb.fitnesstracker.user.api.UserNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/trainings")
@@ -26,46 +27,89 @@ public class TrainingController {
     private final TrainingMapper trainingMapper;
 
     /**
-     * @return
+     * Retrieves all training sessions.
+     * <p>
+     * This endpoint returns all training sessions stored in the system.
+     * The response includes training details along with associated user identifiers.
+     * </p>
+     *
+     * @return {@link ResponseEntity} containing a list of {@link TrainingDto} objects
      */
     @GetMapping
-    public List<Training> findAll() {
-        return trainingService.findAllTrainings();
+    public ResponseEntity<List<TrainingDto>> findAllTrainings() {
+        List<TrainingDto> result = trainingService.findAllTrainings()
+                .stream()
+                .map(trainingMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Training> findById(@PathVariable Long id) {
-        return trainingService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new TrainingNotFoundException(id));
-    }
+
 
     /**
-     * @param userId
-     * @return
+     * Retrieves all training sessions associated with a specific user.
+     * <p>
+     * This endpoint returns a list of {@link TrainingDto} objects that represent all
+     * training records assigned to the user with the given ID.
+     * Each {@code TrainingDto} contains training metadata along with the {@code userId}.
+     * </p>
+     *
+     * @param userId the ID of the user whose trainings are to be retrieved
+     * @return a {@link ResponseEntity} containing the list of {@link TrainingDto} objects
      */
     @GetMapping("/{userId}")
-    public List<Training> findByUserId(@PathVariable Long userId) {
-        return trainingService.findTrainingsByUserId(userId);
+    public ResponseEntity<List<TrainingDto>> findByUserId(@PathVariable Long userId) {
+        List<TrainingDto> result = trainingService.findTrainingsByUserId(userId)
+                .stream()
+                .map(trainingMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(result);
     }
 
     /**
-     * @param date
-     * @return
+     * Retrieves all training sessions that finished after the specified date.
+     * <p>
+     * This endpoint returns a list of {@link TrainingDto} representing trainings
+     * whose {@code endTime} is after the provided date.
+     * The date must be in ISO format (yyyy-MM-dd).
+     * </p>
+     *
+     * @param date the date after which finished trainings should be retrieved (format: yyyy-MM-dd)
+     * @return a {@link ResponseEntity} containing a list of {@link TrainingDto} objects
      */
     @GetMapping("/finished/{date}")
-    public List<Training> findAfterDate(
+    public ResponseEntity<List<TrainingDto>> findAfterDate(
             @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
-        return trainingService.findTrainingsAfterDate(date);
+        List<TrainingDto> result = trainingService.findTrainingsAfterDate(date)
+                .stream()
+                .map(trainingMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(result);
     }
 
     /**
-     * @param activityType
-     * @return
+     * Retrieves all training sessions filtered by the specified activity type.
+     * <p>
+     * This endpoint allows clients to fetch trainings that match a specific {@link ActivityType},
+     * such as RUNNING, CYCLING, TENNIS, etc. The activity type must be provided as a query parameter.
+     * </p>
+     *
+     * Example request:
+     * <pre>
+     * GET /v1/trainings/activityType?activityType=RUNNING
+     * </pre>
+     *
+     * @param activityType the {@link ActivityType} used to filter training records (e.g. RUNNING, TENNIS)
+     * @return a {@link ResponseEntity} containing a list of {@link TrainingDto} objects
+     *         that match the specified activity type
      */
     @GetMapping("/activityType")
-    public List<Training> findByActivity(@RequestParam("activityType") ActivityType activityType) {
-        return trainingService.findTrainingsByActivity(activityType);
+    public ResponseEntity<List<TrainingDto>> findByActivity(@RequestParam("activityType") ActivityType activityType) {
+        List<TrainingDto> result = trainingService.findTrainingsByActivity(activityType)
+                .stream()
+                .map(trainingMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(result);
     }
 
     /**

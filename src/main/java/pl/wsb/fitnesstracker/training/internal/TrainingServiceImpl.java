@@ -21,7 +21,7 @@ public class TrainingServiceImpl implements TrainingService {
     private final UserRepository userRepository;
 
     @Override
-    public Optional<Training> findById(final Long trainingId) {
+    public Optional<Training> findById(Long trainingId) {
         return trainingRepository.findById(trainingId);
     }
 

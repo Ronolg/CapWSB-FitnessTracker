@@ -9,10 +9,43 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TrainingService {
+    /**
+     * Retrieves a training by its unique identifier.
+     *
+     * @param trainingId the ID of the training to retrieve
+     * @return an {@link Optional} containing the {@link Training} if found, or empty if not found
+     */
     Optional<Training> findById(Long trainingId);
+
+    /**
+     * Retrieves all training entries from the system.
+     *
+     * @return a list of all {@link Training} entities
+     */
     List<Training> findAllTrainings();
+
+    /**
+     * Retrieves all trainings associated with a specific user.
+     *
+     * @param userId the ID of the user whose trainings are to be retrieved
+     * @return a list of {@link Training} entries associated with the user
+     */
     List<Training> findTrainingsByUserId(Long userId);
+
+    /**
+     * Retrieves all trainings that finished after a specified date.
+     *
+     * @param date the date after which training sessions must have ended
+     * @return a list of {@link Training} entries that ended after the given date
+     */
     List<Training> findTrainingsAfterDate(Date date);
+
+    /**
+     * Retrieves all trainings filtered by activity type.
+     *
+     * @param activityType the type of activity (e.g., RUNNING, CYCLING)
+     * @return a list of {@link Training} entries matching the specified activity type
+     */
     List<Training> findTrainingsByActivity(ActivityType activityType);
 
     /**

@@ -78,16 +78,14 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
 
         User user1 = existingUser(generateClient());
         Training training1 = persistTraining(generateTraining(user1));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         mockMvc.perform(get("/v1/trainings").contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].user.id").value(user1.getId()))
-                .andExpect(jsonPath("$[0].user.firstName").value(user1.getFirstName()))
-                .andExpect(jsonPath("$[0].user.lastName").value(user1.getLastName()))
-                .andExpect(jsonPath("$[0].user.email").value(user1.getEmail()))
+                .andExpect(jsonPath("$[0].userId").value(user1.getId()))
+
 
 
                 .andExpect(jsonPath("$[0].startTime").value(sdf.format(training1.getStartTime())))
@@ -103,16 +101,14 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
 
         User user1 = existingUser(generateClient());
         Training training1 = persistTraining(generateTraining(user1));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         mockMvc.perform(get("/v1/trainings/{userId}", user1.getId()).contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].user.id").value(user1.getId()))
-                .andExpect(jsonPath("$[0].user.firstName").value(user1.getFirstName()))
-                .andExpect(jsonPath("$[0].user.lastName").value(user1.getLastName()))
-                .andExpect(jsonPath("$[0].user.email").value(user1.getEmail()))
+                .andExpect(jsonPath("$[0].userId").value(user1.getId()))
+
                 .andExpect(jsonPath("$[0].startTime").value(sdf.format(training1.getStartTime())))
                 .andExpect(jsonPath("$[0].endTime").value(sdf.format(training1.getEndTime())))
                 .andExpect(jsonPath("$[0].distance").value((training1.getDistance())))
@@ -128,16 +124,14 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
         Training training1 = persistTraining(generateTrainingWithDetails(user1, "2024-05-19 19:00:00", "2024-05-19 20:30:00", RUNNING, 14, 11.5));
         persistTraining(generateTrainingWithDetails(user1, "2024-05-17 19:00:00", "2024-05-17 20:30:00", RUNNING, 14, 11.5));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         mockMvc.perform(get("/v1/trainings/finished/{afterTime}", "2024-05-18").contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].user.id").value(user1.getId()))
-                .andExpect(jsonPath("$[0].user.firstName").value(user1.getFirstName()))
-                .andExpect(jsonPath("$[0].user.lastName").value(user1.getLastName()))
-                .andExpect(jsonPath("$[0].user.email").value(user1.getEmail()))
+                .andExpect(jsonPath("$[0].userId").value(user1.getId()))
+
                 .andExpect(jsonPath("$[0].startTime").value(sdf.format(training1.getStartTime())))
                 .andExpect(jsonPath("$[0].endTime").value(sdf.format(training1.getEndTime())))
                 .andExpect(jsonPath("$[0].distance").value((training1.getDistance())))
@@ -157,15 +151,10 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].user.id").value(user1.getId()))
-                .andExpect(jsonPath("$[0].user.firstName").value(user1.getFirstName()))
-                .andExpect(jsonPath("$[0].user.lastName").value(user1.getLastName()))
-                .andExpect(jsonPath("$[0].user.email").value(user1.getEmail()))
+                .andExpect(jsonPath("$[0].userId").value(user1.getId()))
+
                 .andExpect(jsonPath("$[0].activityType").value(training2.getActivityType().toString()))
-                .andExpect(jsonPath("$[1].user.id").value(user1.getId()))
-                .andExpect(jsonPath("$[1].user.firstName").value(user1.getFirstName()))
-                .andExpect(jsonPath("$[1].user.lastName").value(user1.getLastName()))
-                .andExpect(jsonPath("$[1].user.email").value(user1.getEmail()))
+
                 .andExpect(jsonPath("$[1].activityType").value(training3.getActivityType().toString()))
 
                 .andExpect(jsonPath("$[2]").doesNotExist());
