@@ -1,13 +1,185 @@
 {
 	"info": {
-		"_postman_id": "6a96376c-f73b-41fe-9752-8c9536964462",
-		"name": "New Collection",
+		"_postman_id": "b9e04d67-3eca-4dc6-882e-e84a197cb56c",
+		"name": "JavaSpringCollection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26925360"
+		"_exporter_id": "26310694"
 	},
 	"item": [
 		{
-			"name": "New Request",
+			"name": "User",
+			"item": [
+				{
+					"name": "Delete user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/v1/users/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"v1",
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": 5,\r\n        \"firstName\": \"SophiaUpdated\",\r\n        \"lastName\": \"Baker\",\r\n        \"birthdate\": \"1976-06-08\",\r\n        \"email\": \"Sophia.Baker@domain.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/v1/users/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"v1",
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get users older than",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/v1/users/olderThan/30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"v1",
+								"users",
+								"olderThan",
+								"30"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get users by email fragment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/v1/users/email/fragment?fragment=Johnson",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"v1",
+								"users",
+								"email",
+								"fragment"
+							],
+							"query": [
+								{
+									"key": "fragment",
+									"value": "Johnson"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Requests, which are handled by UserController"
+		},
+		{
+			"name": "Training",
+			"item": [
+				{
+					"name": "http://localhost:9090/v1/trainings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": 1,\r\n        \"userId\": 5,\r\n        \"lastName\": \"Baker\",\r\n        \"birthdate\": \"1976-06-08\",\r\n        \"email\": \"Sophia.Baker@domain.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/v1/trainings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"v1",
+								"trainings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update or create training for user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n        \"id\": 1,\r\n        \"userId\": 5,\r\n        \"startTime\": \"2024-01-19T07:00:00\",\r\n        \"endTime\": \"2024-01-19T08:30:00\",\r\n        \"activityType\": \"RUNNING\",\r\n        \"distance\": 1000.5,\r\n        \"averageSpeed\": 213.7\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/v1/trainings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"v1",
+								"trainings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Requests, which are handled by TrainingController"
+		},
+		{
+			"name": "Get all users",
 			"request": {
 				"method": "GET",
 				"header": [],
